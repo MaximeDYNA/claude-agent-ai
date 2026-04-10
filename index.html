@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneCenter</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e10;
+    --bg2: #16161a;
+    --bg3: #1e1e24;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8e6e0;
+    --muted: #7a7870;
+    --accent: #c8f060;
+    --accent2: #60c8f0;
+    --accent3: #f060c8;
+    --warn: #f0a060;
+    --success: #60f0a0;
+    --danger: #f06060;
+    --card: #131317;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+  .logo span { color: var(--accent); }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .lang-toggle {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .lang-btn {
+    padding: 5px 14px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .lang-btn.active { background: var(--accent); color: #0e0e10; }
+  #datetime {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* NAV TABS */
+  nav {
+    display: flex;
+    gap: 4px;
+    padding: 14px 28px 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 10px 18px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* MAIN */
+  main { padding: 28px; max-width: 1200px; margin: 0 auto; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media(max-width: 700px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  /* INPUTS */
+  input[type="text"], input[type="date"], input[type="url"], textarea, select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent2); }
+  select option { background: var(--bg3); }
+  label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 5px; font-weight: 500; }
+
+  /* BUTTONS */
+  .btn {
+    padding: 9px 18px;
+    border-radius: var(--radius-sm);
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-accent { background: var(--accent); color: #0e0e10; }
+  .btn-accent:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border2); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--border2); }
+  .btn-danger { background: transparent; color: var(--danger); border: 1px solid rgba(240,96,96,0.25); font-size: 11px; padding: 5px 10px; }
+  .btn-sm { padding: 6px 12px; font-size: 11px; }
+
+  /* STAT PILLS */
+  .stat-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .stat-pill {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 8px 16px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .stat-pill .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-accent { background: var(--accent); }
+  .dot-blue { background: var(--accent2); }
+  .dot-pink { background: var(--accent3); }
+  .dot-warn { background: var(--warn); }
+
+  /* PRIORITY SECTION */
+  .focus-input {
+    font-size: 20px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border2);
+    border-radius: 0;
+    padding: 8px 0;
+    color: var(--text);
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  .focus-input:focus { border-bottom-color: var(--accent); outline: none; }
+  .priority-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .priority-item:last-child { border-bottom: none; }
+  .priority-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0e0e10;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .priority-item input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    padding: 0;
+  }
+  .priority-item input:focus { outline: none; }
+  .priority-item input::placeholder { color: var(--muted); }
+
+  /* TASK LIST */
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+    group: true;
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-cb { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+  .task-text { flex: 1; font-size: 13px; }
+  .task-text.done { text-decoration: line-through; color: var(--muted); }
+  .tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-family: 'Syne', sans-serif;
+  }
+  .tag-work { background: rgba(96,200,240,0.15); color: var(--accent2); }
+  .tag-client { background: rgba(240,96,200,0.15); color: var(--accent3); }
+  .tag-web { background: rgba(200,240,96,0.15); color: var(--accent); }
+  .tag-admin { background: rgba(240,160,96,0.15); color: var(--warn); }
+
+  /* CLIENT TABLE */
+  .client-table { width: 100%; border-collapse: collapse; }
+  .client-table th {
+    text-align: left;
+    font-size: 11px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 0 0 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .client-table td {
+    padding: 12px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .client-table tr:last-child td { border-bottom: none; }
+  .client-table td:not(:last-child) { padding-right: 16px; }
+  .status-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Syne', sans-serif;
+    white-space: nowrap;
+  }
+  .s-active { background: rgba(96,240,160,0.15); color: var(--success); }
+  .s-followup { background: rgba(240,160,96,0.15); color: var(--warn); }
+  .s-pending { background: rgba(200,240,96,0.12); color: var(--accent); }
+  .s-inactive { background: rgba(255,255,255,0.06); color: var(--muted); }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; font-family: 'Syne', sans-serif;
+    color: var(--accent); flex-shrink: 0;
+  }
+  .client-name-cell { display: flex; align-items: center; gap: 10px; }
+
+  /* CONTENT IDEAS */
+  .idea-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .platform-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .p-social { background: rgba(240,96,200,0.15); color: var(--accent3); }
+  .p-blog { background: rgba(200,240,96,0.15); color: var(--accent); }
+  .p-email { background: rgba(96,200,240,0.15); color: var(--accent2); }
+  .p-wp { background: rgba(240,160,96,0.15); color: var(--warn); }
+
+  /* AI CHAT */
+  .chat-messages {
+    min-height: 240px;
+    max-height: 420px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-right: 4px;
+  }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+  .msg {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 88%;
+  }
+  .msg-user {
+    background: var(--accent);
+    color: #0e0e10;
+    align-self: flex-end;
+    font-weight: 500;
+  }
+  .msg-ai {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+    white-space: pre-wrap;
+  }
+  .msg-ai.loading { color: var(--muted); font-style: italic; }
+  .chat-input-row { display: flex; gap: 10px; }
+  .chat-input-row textarea {
+    flex: 1;
+    min-height: 48px;
+    max-height: 120px;
+    resize: none;
+  }
+  .api-key-notice {
+    background: rgba(200,240,96,0.07);
+    border: 1px solid rgba(200,240,96,0.2);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .api-key-row { display: flex; gap: 10px; margin-top: 10px; }
+  .api-key-row input { flex: 1; font-family: monospace; font-size: 12px; }
+
+  /* WORDPRESS */
+  .wp-tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width: 600px) { .wp-tool-grid { grid-template-columns: 1fr; } }
+  .wp-tool {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+  }
+  .wp-tool h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .wp-output {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    font-size: 12px;
+    min-height: 80px;
+    color: var(--muted);
+    font-style: italic;
+    white-space: pre-wrap;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+
+  /* HELPERS */
+  .row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+  .field { flex: 1; min-width: 120px; }
+  .spacer { height: 16px; }
+  .section-header {
+    margin-bottom: 22px;
+  }
+  .section-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+  .section-header h2 span { color: var(--accent); }
+  .section-header p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 4px;
+    font-weight: 300;
+  }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+  .bilingual { display: flex; gap: 6px; align-items: center; font-size: 11px; color: var(--muted); }
+  .bilingual::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">One<span>Center</span></div>
+  <div class="header-right">
+    <div id="datetime"></div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('fr')">FR</button>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <button class="tab active" onclick="showTab('focus')" data-en="Focus" data-fr="Priorités">Focus</button>
+  <button class="tab" onclick="showTab('tasks')" data-en="Tasks" data-fr="Tâches">Tasks</button>
+  <button class="tab" onclick="showTab('clients')" data-en="Clients" data-fr="Clients">Clients</button>
+  <button class="tab" onclick="showTab('content')" data-en="Content" data-fr="Contenu">Content</button>
+  <button class="tab" onclick="showTab('wordpress')" data-en="WordPress" data-fr="WordPress">WordPress</button>
+  <button class="tab" onclick="showTab('ai')" data-en="AI Assistant" data-fr="Assistant IA">AI Assistant</button>
+</nav>
+
+<main>
+
+  <!-- FOCUS -->
+  <div id="section-focus" class="section active">
+    <div class="section-header">
+      <h2 data-en="Good morning. <span>Let's own today.</span>" data-fr="Bonjour. <span>On prend le contrôle.</span>">Good morning. <span>Let's own today.</span></h2>
+      <p data-en="Set your intention and top 3 priorities for the day." data-fr="Définissez votre intention et vos 3 priorités du jour.">Set your intention and top 3 priorities for the day.</p>
+    </div>
+
+    <div class="stat-row" id="focus-stats"></div>
+
+    <div class="card">
+      <div class="card-title" data-en="Daily intention" data-fr="Intention du jour">Daily intention</div>
+      <input class="focus-input" id="intention" type="text" data-en-ph="Today I will focus on..." data-fr-ph="Aujourd'hui je me concentre sur..." placeholder="Today I will focus on..." oninput="save()">
+    </div>
+
+    <div class="card">
+      <div class="card-title" data-en="Top 3 priorities" data-fr="3 priorités du jour">Top 3 priorities</div>
+      <div class="priority-item">
+        <div class="priority-num">1</div>
+        <input id="p1" type="text" data-en-ph="Most important task..." data-fr-ph="Tâche la plus importante..." placeholder="Most important task..." oninput="save()">
+      </div>
+      <div class="priority-item">
+        <div class="priority-num">2</div>
+        <input id="p2" type="text" data-en-ph="Second priority..." data-fr-ph="Deuxième priorité..." placeholder="Second priority..." oninput="save()">
+      </div>
+      <div class="priority-item">
+        <div class="priority-num">3</div>
+        <input id="p3" type="text" data-en-ph="Third priority..." data-fr-ph="Troisième priorité..." placeholder="Third priority..." oninput="save()">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title" data-en="Energy level" data-fr="Niveau d'énergie">Energy level</div>
+        <select id="energy" onchange="save()">
+          <option value="">— Select —</option>
+          <option value="high" data-en="High — Let's go!" data-fr="Élevé — Allons-y!">High — Let's go!</option>
+          <option value="med" data-en="Medium — Steady" data-fr="Moyen — Régulier">Medium — Steady</option>
+          <option value="low" data-en="Low — Easy does it" data-fr="Faible — Doucement">Low — Easy does it</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-title" data-en="Today's mood" data-fr="Humeur du jour">Today's mood</div>
+        <select id="mood" onchange="save()">
+          <option value="">— Select —</option>
+          <option>🔥 Motivated</option>
+          <option>🧠 Creative</option>
+          <option>📋 Execution mode</option>
+          <option>😤 Grinding</option>
+          <option>😌 Calm & focused</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" data-en="Daily notes" data-fr="Notes du jour">Daily notes</div>
+      <textarea id="daily-notes" rows="4" data-en-ph="Jot down anything on your mind..." data-fr-ph="Notez tout ce qui vous passe par la tête..." placeholder="Jot down anything on your mind..." oninput="save()"></textarea>
+    </div>
+  </div>
+
+  <!-- TASKS -->
+  <div id="section-tasks" class="section">
+    <div class="section-header">
+      <h2 data-en="Task <span>List</span>" data-fr="Liste de <span>tâches</span>">Task <span>List</span></h2>
+      <p data-en="Track everything. Check off what's done." data-fr="Suivez tout. Cochez ce qui est fait.">Track everything. Check off what's done.</p>
+    </div>
+    <div class="card">
+      <div class="card-title" data-en="Add a task" data-fr="Ajouter une tâche">Add a task</div>
+      <div class="row">
+        <div class="field"><label data-en="Task" data-fr="Tâche">Task</label><input type="text" id="new-task" data-en-ph="What needs to get done?" data-fr-ph="Qu'est-ce qui doit être fait?" placeholder="What needs to get done?"></div>
+        <div class="field" style="max-width:130px"><label data-en="Category" data-fr="Catégorie">Category</label>
+          <select id="new-task-cat">
+            <option value="work">Work</option>
+            <option value="client">Client</option>
+            <option value="web">WordPress</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button class="btn btn-accent" onclick="addTask()" data-en="Add" data-fr="Ajouter">Add</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" data-en="Active tasks" data-fr="Tâches actives">Active tasks</div>
+      <div id="task-list"></div>
+    </div>
+  </div>
+
+  <!-- CLIENTS -->
+  <div id="section-clients" class="section">
+    <div class="section-header">
+      <h2 data-en="Client <span>Tracker</span>" data-fr="Suivi <span>clients</span>">Client <span>Tracker</span></h2>
+      <p data-en="Never drop the ball on a relationship." data-fr="Ne laissez jamais tomber une relation.">Never drop the ball on a relationship.</p>
+    </div>
+    <div class="card">
+      <div class="card-title" data-en="Add a client" data-fr="Ajouter un client">Add a client</div>
+      <div class="row">
+        <div class="field"><label data-en="Name" data-fr="Nom">Name</label><input type="text" id="c-name" placeholder="Client name"></div>
+        <div class="field"><label data-en="Company" data-fr="Entreprise">Company</label><input type="text" id="c-company" placeholder="Company"></div>
+        <div class="field"><label data-en="Status" data-fr="Statut">Status</label>
+          <select id="c-status">
+            <option value="active" data-en="Active" data-fr="Actif">Active</option>
+            <option value="followup" data-en="Follow-up needed" data-fr="Suivi requis">Follow-up needed</option>
+            <option value="pending" data-en="Pending" data-fr="En attente">Pending</option>
+            <option value="inactive" data-en="Inactive" data-fr="Inactif">Inactive</option>
+          </select>
+        </div>
+        <div class="field" style="max-width:150px"><label data-en="Next follow-up" data-fr="Prochain suivi">Next follow-up</label><input type="date" id="c-date"></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="row">
+        <div class="field"><label data-en="Notes" data-fr="Notes">Notes</label><input type="text" id="c-notes" data-en-ph="Last discussion, project notes..." data-fr-ph="Dernière discussion, notes projet..." placeholder="Last discussion, project notes..."></div>
+        <button class="btn btn-accent" onclick="addClient()" data-en="Add Client" data-fr="Ajouter">Add Client</button>
+      </div>
+    </div>
+    <div class="card" style="overflow-x:auto">
+      <table class="client-table" id="client-table">
+        <thead>
+          <tr>
+            <th data-en="Client" data-fr="Client">Client</th>
+            <th data-en="Company" data-fr="Entreprise">Company</th>
+            <th data-en="Status" data-fr="Statut">Status</th>
+            <th data-en="Follow-up" data-fr="Suivi">Follow-up</th>
+            <th data-en="Notes" data-fr="Notes">Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="client-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="section-content" class="section">
+    <div class="section-header">
+      <h2 data-en="Content <span>Ideas</span>" data-fr="Idées de <span>contenu</span>">Content <span>Ideas</span></h2>
+      <p data-en="Capture ideas before they vanish. Plan your publishing." data-fr="Capturez les idées avant qu'elles disparaissent.">Capture ideas before they vanish. Plan your publishing.</p>
+    </div>
+    <div class="card">
+      <div class="card-title" data-en="New idea" data-fr="Nouvelle idée">New idea</div>
+      <div class="row">
+        <div class="field"><label data-en="Idea / title" data-fr="Idée / titre">Idea / title</label><input type="text" id="idea-title" data-en-ph="What's the idea?" data-fr-ph="Quelle est l'idée?" placeholder="What's the idea?"></div>
+        <div class="field" style="max-width:140px"><label data-en="Platform" data-fr="Plateforme">Platform</label>
+          <select id="idea-platform">
+            <option value="social">Social Media</option>
+            <option value="blog">Blog / WordPress</option>
+            <option value="email">Email</option>
+            <option value="wp">WordPress Page</option>
+          </select>
+        </div>
+        <button class="btn btn-accent" onclick="addIdea()" data-en="Save Idea" data-fr="Enregistrer">Save Idea</button>
+      </div>
+      <div class="spacer"></div>
+      <label data-en="Notes / angle" data-fr="Notes / angle">Notes / angle</label>
+      <textarea id="idea-notes" rows="2" data-en-ph="Key angle, target audience, hook..." data-fr-ph="Angle clé, audience cible, accroche..." placeholder="Key angle, target audience, hook..."></textarea>
+    </div>
+    <div id="ideas-list"></div>
+  </div>
+
+  <!-- WORDPRESS -->
+  <div id="section-wordpress" class="section">
+    <div class="section-header">
+      <h2 data-en="WordPress <span>Tools</span>" data-fr="Outils <span>WordPress</span>">WordPress <span>Tools</span></h2>
+      <p data-en="AI-powered tools to build and manage your site." data-fr="Outils IA pour construire et gérer votre site.">AI-powered tools to build and manage your site.</p>
+    </div>
+    <div class="api-key-notice" id="wp-api-notice">
+      <strong data-en="AI features require a Claude API key." data-fr="Les fonctionnalités IA nécessitent une clé API Claude.">AI features require a Claude API key.</strong>
+      <span data-en=" Get your free key at console.anthropic.com" data-fr=" Obtenez votre clé gratuite sur console.anthropic.com"> Get your free key at console.anthropic.com</span>
+      <div class="api-key-row">
+        <input type="password" id="api-key-wp" placeholder="sk-ant-...">
+        <button class="btn btn-accent btn-sm" onclick="saveKey()" data-en="Save Key" data-fr="Enregistrer">Save Key</button>
+      </div>
+    </div>
+    <div class="wp-tool-grid">
+      <div class="wp-tool">
+        <h4 data-en="Page / Post Generator" data-fr="Générateur de page/article">Page / Post Generator</h4>
+        <label data-en="Topic or page name" data-fr="Sujet ou nom de page">Topic or page name</label>
+        <input type="text" id="wp-topic" data-en-ph="e.g. About us page, Service page..." data-fr-ph="ex: Page à propos, page de service..." placeholder="e.g. About us page, Service page...">
+        <div class="spacer"></div>
+        <label data-en="Tone" data-fr="Ton">Tone</label>
+        <select id="wp-tone">
+          <option data-en="Professional" data-fr="Professionnel">Professional</option>
+          <option data-en="Friendly" data-fr="Amical">Friendly</option>
+          <option data-en="Bold & Direct" data-fr="Direct & Affirmé">Bold & Direct</option>
+          <option data-en="Minimalist" data-fr="Minimaliste">Minimalist</option>
+        </select>
+        <div class="spacer"></div>
+        <button class="btn btn-accent" style="width:100%" onclick="wpGenerate('page')" data-en="Generate content" data-fr="Générer le contenu">Generate content</button>
+        <div class="wp-output" id="wp-page-out" data-en="Generated content will appear here..." data-fr="Le contenu généré apparaîtra ici...">Generated content will appear here...</div>
+      </div>
+
+      <div class="wp-tool">
+        <h4 data-en="SEO Meta Generator" data-fr="Générateur de méta SEO">SEO Meta Generator</h4>
+        <label data-en="Page topic / keywords" data-fr="Sujet / mots-clés">Page topic / keywords</label>
+        <input type="text" id="wp-seo" data-en-ph="e.g. web design services Montreal..." data-fr-ph="ex: services web design Montréal..." placeholder="e.g. web design services Montreal...">
+        <div class="spacer"></div>
+        <button class="btn btn-accent" style="width:100%;margin-top:10px" onclick="wpGenerate('seo')" data-en="Generate SEO" data-fr="Générer le SEO">Generate SEO</button>
+        <div class="wp-output" id="wp-seo-out" data-en="Title tag, meta description will appear here..." data-fr="Le title tag et la méta description apparaîtront ici...">Title tag, meta description will appear here...</div>
+      </div>
+
+      <div class="wp-tool">
+        <h4 data-en="Blog Post Outline" data-fr="Plan d'article de blogue">Blog Post Outline</h4>
+        <label data-en="Blog topic" data-fr="Sujet du blogue">Blog topic</label>
+        <input type="text" id="wp-blog" data-en-ph="e.g. 5 tips for solopreneurs..." data-fr-ph="ex: 5 conseils pour solopreneurs..." placeholder="e.g. 5 tips for solopreneurs...">
+        <div class="spacer"></div>
+        <button class="btn btn-accent" style="width:100%;margin-top:10px" onclick="wpGenerate('blog')" data-en="Create outline" data-fr="Créer le plan">Create outline</button>
+        <div class="wp-output" id="wp-blog-out" data-en="Blog outline will appear here..." data-fr="Le plan de l'article apparaîtra ici...">Blog outline will appear here...</div>
+      </div>
+
+      <div class="wp-tool">
+        <h4 data-en="CTA / Button Copy" data-fr="Texte d'appel à l'action">CTA / Button Copy</h4>
+        <label data-en="What action do you want?" data-fr="Quelle action souhaitez-vous?">What action do you want?</label>
+        <input type="text" id="wp-cta" data-en-ph="e.g. Book a free consultation..." data-fr-ph="ex: Réserver une consultation gratuite..." placeholder="e.g. Book a free consultation...">
+        <div class="spacer"></div>
+        <button class="btn btn-accent" style="width:100%;margin-top:10px" onclick="wpGenerate('cta')" data-en="Generate CTAs" data-fr="Générer les CTAs">Generate CTAs</button>
+        <div class="wp-output" id="wp-cta-out" data-en="5 CTA variations will appear here..." data-fr="5 variations de CTA apparaîtront ici...">5 CTA variations will appear here...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI ASSISTANT -->
+  <div id="section-ai" class="section">
+    <div class="section-header">
+      <h2 data-en="AI <span>Assistant</span>" data-fr="<span>Assistant</span> IA">AI <span>Assistant</span></h2>
+      <p data-en="Your personal Claude — draft emails, brainstorm, summarize, decide." data-fr="Votre Claude personnel — rédigez, réfléchissez, résumez, décidez.">Your personal Claude — draft emails, brainstorm, summarize, decide.</p>
+    </div>
+    <div class="api-key-notice" id="ai-api-notice">
+      <strong data-en="Connect your Claude API key to activate the assistant." data-fr="Connectez votre clé API Claude pour activer l'assistant.">Connect your Claude API key to activate the assistant.</strong>
+      <span data-en=" Free tier available at console.anthropic.com" data-fr=" Niveau gratuit disponible sur console.anthropic.com"> Free tier available at console.anthropic.com</span>
+      <div class="api-key-row">
+        <input type="password" id="api-key-ai" placeholder="sk-ant-...">
+        <button class="btn btn-accent btn-sm" onclick="saveKey()" data-en="Save Key" data-fr="Enregistrer">Save Key</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <button class="btn btn-ghost btn-sm" onclick="quickPrompt('Draft a professional follow-up email to a client who hasn\'t responded in 5 days')" data-en="Email follow-up" data-fr="Email de suivi">Email follow-up</button>
+        <button class="btn btn-ghost btn-sm" onclick="quickPrompt('Give me 5 social media post ideas for a solo entrepreneur this week')" data-en="Social media ideas" data-fr="Idées réseaux sociaux">Social media ideas</button>
+        <button class="btn btn-ghost btn-sm" onclick="quickPrompt('Help me write a short professional bio for my website')" data-en="Write my bio" data-fr="Rédiger ma bio">Write my bio</button>
+        <button class="btn btn-ghost btn-sm" onclick="quickPrompt('What should I prioritize today as a solo entrepreneur?')" data-en="Prioritize my day" data-fr="Prioriser ma journée">Prioritize my day</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="msg msg-ai" data-en="Bonjour! I'm your OneCenter AI assistant — bilingual, always available. Ask me to draft emails, brainstorm content, plan your week, or anything else. How can I help you today?" data-fr="Bonjour! Je suis votre assistant IA OneCenter — bilingue, toujours disponible. Demandez-moi de rédiger des emails, brainstormer du contenu, planifier votre semaine, ou autre chose. Comment puis-je vous aider?">Bonjour! I'm your OneCenter AI assistant — bilingual, always available. Ask me to draft emails, brainstorm content, plan your week, or anything else. How can I help you today?</div>
+      </div>
+      <div class="chat-input-row">
+        <textarea id="chat-input" rows="2" data-en-ph="Ask me anything... (Enter to send)" data-fr-ph="Posez-moi n'importe quelle question... (Entrée pour envoyer)" placeholder="Ask me anything... (Enter to send)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+        <button class="btn btn-accent" onclick="sendChat()" data-en="Send" data-fr="Envoyer">Send</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+let lang = 'en';
+let apiKey = localStorage.getItem('oc_apikey') || '';
+let tasks = JSON.parse(localStorage.getItem('oc_tasks') || '[]');
+let clients = JSON.parse(localStorage.getItem('oc_clients') || '[]');
+let ideas = JSON.parse(localStorage.getItem('oc_ideas') || '[]');
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === l.toUpperCase()));
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const val = el.getAttribute('data-' + l);
+    if (!val) return;
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      el.placeholder = el.getAttribute('data-' + l + '-ph') || el.placeholder;
+    } else {
+      el.innerHTML = val;
+    }
+  });
+  document.querySelectorAll('[data-en-ph]').forEach(el => {
+    el.placeholder = el.getAttribute('data-' + l + '-ph') || el.getAttribute('data-en-ph');
+  });
+  renderTasks(); renderClients(); renderIdeas();
+}
+
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function updateClock() {
+  const now = new Date();
+  const opts = { weekday:'long', month:'long', day:'numeric' };
+  const dateStr = now.toLocaleDateString(lang === 'fr' ? 'fr-CA' : 'en-CA', opts);
+  const time = now.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  document.getElementById('datetime').textContent = dateStr + ' · ' + time;
+}
+
+function updateStats() {
+  const active = tasks.filter(t => !t.done).length;
+  const fu = clients.filter(c => c.status === 'followup').length;
+  const el = document.getElementById('focus-stats');
+  el.innerHTML = `
+    <div class="stat-pill"><span class="dot dot-accent"></span><span>${active} ${lang==='fr'?'tâches actives':'active tasks'}</span></div>
+    <div class="stat-pill"><span class="dot dot-pink"></span><span>${clients.length} ${lang==='fr'?'clients':'clients'}</span></div>
+    ${fu > 0 ? `<div class="stat-pill"><span class="dot dot-warn"></span><span>${fu} ${lang==='fr'?'suivis requis':'follow-up needed'}</span></div>` : ''}
+    <div class="stat-pill"><span class="dot dot-blue"></span><span>${ideas.length} ${lang==='fr'?'idées':'ideas'}</span></div>
+  `;
+}
+
+function save() {
+  localStorage.setItem('oc_intention', document.getElementById('intention').value);
+  localStorage.setItem('oc_p1', document.getElementById('p1').value);
+  localStorage.setItem('oc_p2', document.getElementById('p2').value);
+  localStorage.setItem('oc_p3', document.getElementById('p3').value);
+  localStorage.setItem('oc_energy', document.getElementById('energy').value);
+  localStorage.setItem('oc_mood', document.getElementById('mood').value);
+  localStorage.setItem('oc_notes', document.getElementById('daily-notes').value);
+}
+
+function loadFocus() {
+  document.getElementById('intention').value = localStorage.getItem('oc_intention') || '';
+  document.getElementById('p1').value = localStorage.getItem('oc_p1') || '';
+  document.getElementById('p2').value = localStorage.getItem('oc_p2') || '';
+  document.getElementById('p3').value = localStorage.getItem('oc_p3') || '';
+  document.getElementById('energy').value = localStorage.getItem('oc_energy') || '';
+  document.getElementById('mood').value = localStorage.getItem('oc_mood') || '';
+  document.getElementById('daily-notes').value = localStorage.getItem('oc_notes') || '';
+}
+
+// TASKS
+function addTask() {
+  const text = document.getElementById('new-task').value.trim();
+  const cat = document.getElementById('new-task-cat').value;
+  if (!text) return;
+  tasks.push({ id: Date.now(), text, cat, done: false });
+  localStorage.setItem('oc_tasks', JSON.stringify(tasks));
+  document.getElementById('new-task').value = '';
+  renderTasks(); updateStats();
+}
+
+function toggleTask(id) {
+  tasks = tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
+  localStorage.setItem('oc_tasks', JSON.stringify(tasks));
+  renderTasks(); updateStats();
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  localStorage.setItem('oc_tasks', JSON.stringify(tasks));
+  renderTasks(); updateStats();
+}
+
+function renderTasks() {
+  const el = document.getElementById('task-list');
+  const tagMap = { work: 'tag-work', client: 'tag-client', web: 'tag-web', admin: 'tag-admin' };
+  const labelMap = { work: 'Work', client: 'Client', web: 'WordPress', admin: 'Admin' };
+  const sorted = [...tasks].sort((a, b) => a.done - b.done);
+  el.innerHTML = sorted.length === 0
+    ? `<p style="color:var(--muted);font-size:13px;padding:12px 0">${lang==='fr'?'Aucune tâche pour l\'instant.':'No tasks yet.'}</p>`
+    : sorted.map(t => `
+      <div class="task-item">
+        <input type="checkbox" class="task-cb" ${t.done ? 'checked' : ''} onchange="toggleTask(${t.id})">
+        <span class="task-text ${t.done ? 'done' : ''}">${t.text}</span>
+        <span class="tag ${tagMap[t.cat]}">${labelMap[t.cat]}</span>
+        <button class="btn btn-danger" onclick="deleteTask(${t.id})">✕</button>
+      </div>`).join('');
+}
+
+// CLIENTS
+function addClient() {
+  const name = document.getElementById('c-name').value.trim();
+  if (!name) return;
+  clients.push({
+    id: Date.now(),
+    name,
+    company: document.getElementById('c-company').value.trim(),
+    status: document.getElementById('c-status').value,
+    date: document.getElementById('c-date').value,
+    notes: document.getElementById('c-notes').value.trim()
+  });
+  localStorage.setItem('oc_clients', JSON.stringify(clients));
+  ['c-name','c-company','c-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('c-date').value = '';
+  renderClients(); updateStats();
+}
+
+function deleteClient(id) {
+  clients = clients.filter(c => c.id !== id);
+  localStorage.setItem('oc_clients', JSON.stringify(clients));
+  renderClients(); updateStats();
+}
+
+function renderClients() {
+  const el = document.getElementById('client-body');
+  const sMap = {
+    active: ['s-active', lang==='fr'?'Actif':'Active'],
+    followup: ['s-followup', lang==='fr'?'Suivi requis':'Follow-up needed'],
+    pending: ['s-pending', lang==='fr'?'En attente':'Pending'],
+    inactive: ['s-inactive', lang==='fr'?'Inactif':'Inactive']
+  };
+  el.innerHTML = clients.length === 0
+    ? `<tr><td colspan="6" style="color:var(--muted);padding:16px 0">${lang==='fr'?'Aucun client ajouté.':'No clients added yet.'}</td></tr>`
+    : clients.map(c => {
+        const [cls, label] = sMap[c.status] || ['s-inactive','—'];
+        const initials = c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+        return `<tr>
+          <td><div class="client-name-cell"><div class="avatar">${initials}</div>${c.name}</div></td>
+          <td style="color:var(--muted)">${c.company || '—'}</td>
+          <td><span class="status-badge ${cls}">${label}</span></td>
+          <td style="color:var(--muted)">${c.date || '—'}</td>
+          <td style="color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.notes || '—'}</td>
+          <td><button class="btn btn-danger" onclick="deleteClient(${c.id})">✕</button></td>
+        </tr>`;
+      }).join('');
+}
+
+// IDEAS
+function addIdea() {
+  const title = document.getElementById('idea-title').value.trim();
+  if (!title) return;
+  ideas.push({
+    id: Date.now(),
+    title,
+    platform: document.getElementById('idea-platform').value,
+    notes: document.getElementById('idea-notes').value.trim()
+  });
+  localStorage.setItem('oc_ideas', JSON.stringify(ideas));
+  document.getElementById('idea-title').value = '';
+  document.getElementById('idea-notes').value = '';
+  renderIdeas(); updateStats();
+}
+
+function deleteIdea(id) {
+  ideas = ideas.filter(i => i.id !== id);
+  localStorage.setItem('oc_ideas', JSON.stringify(ideas));
+  renderIdeas(); updateStats();
+}
+
+function renderIdeas() {
+  const el = document.getElementById('ideas-list');
+  const pMap = {
+    social: ['p-social', 'Social'],
+    blog: ['p-blog', 'Blog'],
+    email: ['p-email', 'Email'],
+    wp: ['p-wp', 'WordPress']
+  };
+  el.innerHTML = ideas.length === 0
+    ? `<div class="card" style="color:var(--muted);font-size:13px">${lang==='fr'?'Aucune idée enregistrée.':'No ideas saved yet.'}</div>`
+    : ideas.map(i => {
+        const [cls, label] = pMap[i.platform] || ['p-blog','Blog'];
+        return `<div class="idea-card">
+          <span class="platform-badge ${cls}">${label}</span>
+          <div style="flex:1">
+            <div style="font-weight:500;margin-bottom:4px">${i.title}</div>
+            ${i.notes ? `<div style="color:var(--muted);font-size:12px">${i.notes}</div>` : ''}
+          </div>
+          <button class="btn btn-danger" onclick="deleteIdea(${i.id})">✕</button>
+        </div>`;
+      }).join('');
+}
+
+// API KEY
+function saveKey() {
+  const k1 = document.getElementById('api-key-wp') ? document.getElementById('api-key-wp').value.trim() : '';
+  const k2 = document.getElementById('api-key-ai') ? document.getElementById('api-key-ai').value.trim() : '';
+  apiKey = k1 || k2 || apiKey;
+  if (apiKey) {
+    localStorage.setItem('oc_apikey', apiKey);
+    ['ai-api-notice','wp-api-notice'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    alert(lang === 'fr' ? 'Clé API sauvegardée!' : 'API key saved!');
+  }
+}
+
+// CLAUDE API CALL
+async function callClaude(prompt, systemPrompt) {
+  if (!apiKey) {
+    return lang === 'fr'
+      ? 'Veuillez entrer votre clé API Claude pour activer cette fonctionnalité.'
+      : 'Please enter your Claude API key to use this feature.';
+  }
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: systemPrompt || `You are a smart bilingual (English/French) AI assistant for a solo entrepreneur. Be concise, practical, and action-oriented. Current language: ${lang === 'fr' ? 'French' : 'English'}.`,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  const data = await resp.json();
+  if (data.error) return 'Error: ' + data.error.message;
+  return data.content[0].text;
+}
+
+// CHAT
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML += `<div class="msg msg-user">${text}</div>`;
+  const loading = document.createElement('div');
+  loading.className = 'msg msg-ai loading';
+  loading.textContent = lang === 'fr' ? 'En train de réfléchir...' : 'Thinking...';
+  msgs.appendChild(loading);
+  msgs.scrollTop = msgs.scrollHeight;
+  const reply = await callClaude(text);
+  loading.className = 'msg msg-ai';
+  loading.textContent = reply;
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function quickPrompt(text) {
+  document.getElementById('chat-input').value = text;
+  showTab('ai');
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    if (i === 5) t.classList.add('active');
+    else t.classList.remove('active');
+  });
+  sendChat();
+}
+
+// WORDPRESS AI TOOLS
+async function wpGenerate(type) {
+  const prompts = {
+    page: () => {
+      const topic = document.getElementById('wp-topic').value;
+      const tone = document.getElementById('wp-tone').value;
+      return `Write WordPress page content for: "${topic}". Tone: ${tone}. Include: H1, 2-3 paragraphs, key benefits, and a CTA. Language: ${lang === 'fr' ? 'French' : 'English'}.`;
+    },
+    seo: () => {
+      const kw = document.getElementById('wp-seo').value;
+      return `Generate SEO metadata for a WordPress page about: "${kw}". Provide: 1 SEO title tag (under 60 chars), 1 meta description (under 155 chars), 5 focus keywords. Language: ${lang === 'fr' ? 'French' : 'English'}.`;
+    },
+    blog: () => {
+      const topic = document.getElementById('wp-blog').value;
+      return `Create a detailed blog post outline for: "${topic}". Include: title, intro hook, 5 main sections with subpoints, conclusion, CTA. Language: ${lang === 'fr' ? 'French' : 'English'}.`;
+    },
+    cta: () => {
+      const action = document.getElementById('wp-cta').value;
+      return `Write 5 compelling CTA button/headline variations for: "${action}". Make them action-oriented, benefit-driven, and varied in style. Language: ${lang === 'fr' ? 'French' : 'English'}.`;
+    }
+  };
+  const outIds = { page: 'wp-page-out', seo: 'wp-seo-out', blog: 'wp-blog-out', cta: 'wp-cta-out' };
+  const out = document.getElementById(outIds[type]);
+  out.style.fontStyle = 'italic';
+  out.textContent = lang === 'fr' ? 'Génération en cours...' : 'Generating...';
+  const result = await callClaude(prompts[type]());
+  out.style.fontStyle = 'normal';
+  out.textContent = result;
+}
+
+// INIT
+if (apiKey) {
+  ['ai-api-notice','wp-api-notice'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+}
+loadFocus();
+renderTasks();
+renderClients();
+renderIdeas();
+updateStats();
+updateClock();
+setInterval(updateClock, 30000);
+setInterval(updateStats, 5000);
+</script>
+</body>
+</html>
